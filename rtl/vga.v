@@ -42,19 +42,28 @@ module vga(clk, reset, VGA_HS, VGA_VS, VGA_R, VGA_G, VGA_B);
   );
 
   
-  localparam COLOR_I = 5;
-  localparam COLOR_R= 30;
+  localparam COLOR_I    = 5;
+  localparam COLOR_R    = 30;
+  
+  reg [2:0]  pix        = 3'b111;
+  
+  always @( posedge clk )
+    begin
+      if ( display_on ) 
+        begin 
+          if ( hpos % 'd80 == 0 )
+            pix <= pix - 3'b1;
+          else 
+            pix <= 'b0;
+        end
+    end
+  
   
   // Assign each color bit to individual wires.
-  assign VGA_R[3] = display_on && (       ( vpos & COLOR_R == 0 ) ||
-                                          ( vpos & COLOR_R == 0 )      )  && 0 ;
-  
-  assign VGA_G[3] =  display_on &&    hpos[COLOR_I] ;
-  assign VGA_B[3] =  display_on && ( !hpos[COLOR_I] ) ;
 
-  assign VGA_R[2:0] = 'b0;
-  assign VGA_G[2:0] = 'b0;
-  assign VGA_B[2:0] = 'b0;
+  assign VGA_R  =  { 3 { pix[1] } };
+  assign VGA_G  =  { 3 { pix[2] } };
+  assign VGA_B  =  { 3 { pix[0] } };
   
 
   // Concatenation operator merges the red, green, and blue signals
