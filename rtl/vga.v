@@ -3,12 +3,14 @@
 A simple test pattern using the hvsync_generator module.
 */
 
-module vga(clk, reset, VGA_HS, VGA_VS, VGA_R, VGA_G, VGA_B);
+module vga(
 
-  input         clk, reset;         	// clock and reset signals (input)
+  input         clk, reset,         	// clock and reset signals (input)
   
-  output        VGA_HS, VGA_VS;	        // H/V sync signals (output)
-  output [3:0]  VGA_G, VGA_R, VGA_B;	// RGB output (BGR order)
+  output        VGA_HS, VGA_VS,	        // H/V sync signals (output)
+  output [3:0]  VGA_G, VGA_R, VGA_B	// RGB output (BGR order)
+
+  );
   
   wire          display_on;	            // display_on signal 
   wire   [9:0]  hpos;               	// 9-bit horizontal position
@@ -18,7 +20,8 @@ module vga(clk, reset, VGA_HS, VGA_VS, VGA_R, VGA_G, VGA_B);
   wire           locked;
   // Include the H-V Sync Generator module and
   // wire it to inputs, outputs, and wires.
-  hvsync(
+  hvsync inst_hvsync
+  (
     .clk(clk_130),
     .reset(!locked),
     
@@ -31,13 +34,11 @@ module vga(clk, reset, VGA_HS, VGA_VS, VGA_R, VGA_G, VGA_B);
   );
   
   
-    clk_wiz
+  clk_wiz inst_clk_wiz
   (
-  // Clock out ports  
-  .clk_out1(clk_130),
-  // Status and control signals               
+  .clk_out1(clk_130),   
   .locked(locked),
- // Clock in ports
+  
   .clk_in1(clk)
   );
 
@@ -47,23 +48,25 @@ module vga(clk, reset, VGA_HS, VGA_VS, VGA_R, VGA_G, VGA_B);
   
   reg [2:0]  pix        = 3'b111;
   
-  always @( posedge clk )
+  always @( posedge clk_130)
     begin
-      if ( display_on ) 
+      if ( ( hpos < 640 ) && ( vpos < 480 ) ) 
         begin 
-          if ( hpos % 'd80 == 0 )
-            pix <= pix - 3'b1;
-          else 
-            pix <= 'b0;
+          if ( ( hpos % 'd80 == 0 ) )
+                pix <= pix - 3'b001;
         end
     end
   
-  
   // Assign each color bit to individual wires.
 
-  assign VGA_R  =  { 3 { pix[1] } };
-  assign VGA_G  =  { 3 { pix[2] } };
-  assign VGA_B  =  { 3 { pix[0] } };
+  assign VGA_R[2:0]  =  'b111 ;
+  assign VGA_G[2:0]  =  'b111 ; 
+  assign VGA_B[2:0]  =  'b111 ;
+  
+  assign VGA_R[3] = pix[2];
+  assign VGA_G[3] = pix[1];
+  assign VGA_B[3] = pix[0];
+  
   
 
   // Concatenation operator merges the red, green, and blue signals
