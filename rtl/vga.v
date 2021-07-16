@@ -16,13 +16,13 @@ module vga(
   wire   [9:0]  hpos;               	// 9-bit horizontal position
   wire   [9:0]  vpos;                	// 9-bit vertical position
  
-  wire           clk_130;
+  wire           clk_25;
   wire           locked;
   // Include the H-V Sync Generator module and
   // wire it to inputs, outputs, and wires.
   hvsync inst_hvsync
   (
-    .clk(clk_130),
+    .clk(clk_25),
     .reset(!locked),
     
     .hsync(VGA_HS),
@@ -34,9 +34,9 @@ module vga(
   );
   
   
-  clk_wiz inst_clk_wiz
+  clk_25 inst_clk_25
   (
-  .clk_out1(clk_130),   
+  .clk_out1(clk_25),   
   .locked(locked),
   
   .clk_in1(clk)
@@ -48,7 +48,7 @@ module vga(
   
   reg [2:0]  pix        = 3'b111;
   
-  always @( posedge clk_130)
+  always @( posedge clk_25)
     begin
       if ( ( hpos < 640 ) && ( vpos < 480 ) ) 
         begin 
