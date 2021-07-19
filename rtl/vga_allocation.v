@@ -21,26 +21,26 @@ module vga(
   wire           locked;
   // Include the H-V Sync Generator module and
   // wire it to inputs, outputs, and wires.
-  hvsync inst_hvsync
+  vga_hvsync_gen inst_vga_hvsync_gen
   (
-    .clk(clk_25),
-    .reset(locked),
+    .clk        (clk_25        ),
+    .reset      (locked        ),
     
-    .hsync(VGA_HS),
-    .vsync(VGA_VS),
+    .hsync      (VGA_HS        ),
+    .vsync      (VGA_VS        ),
     
-    .display_on(display_on),
-    .hpos(hpos),
-    .vpos(vpos)
+    .display_on (display_on    ),
+    .hpos       (hpos          ),
+    .vpos       (vpos          )
   );
   
   
   clk_25 inst_clk_25
   (
-  .clk_out1(clk_25),   
-  .locked(locked),
+  .clk_out1     (clk_25         ),   
+  .locked       (locked         ),
   
-  .clk_in1(clk)
+  .clk_in1      (clk            )
   );
 
   localparam COLOR_I    = 5;
@@ -68,7 +68,7 @@ module vga(
   assign b[3]    =  pix[0];
   
 
-   d_ff_all_colors inst_dff_all_colors
+   d_ff_all_colors inst_d_ff_all_colors
    (
      .clk       (clk_25     ),  
      .reset     (0          ), 

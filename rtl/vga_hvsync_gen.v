@@ -10,7 +10,7 @@ To use:
 - Add a 3-bit (or more) "rgb" output to the top level
 */
 
-module hvsync(clk, reset, hsync, vsync, display_on, hpos, vpos);
+module vga_hvsync_gen(clk, reset, hsync, vsync, display_on, hpos, vpos);
 
   input                 clk;
   input                 reset;
@@ -25,11 +25,11 @@ module hvsync(clk, reset, hsync, vsync, display_on, hpos, vpos);
   // horizontal constants
   parameter H_DISPLAY       = 640; // horizontal display width
   parameter H_BACK          =  48; // horizontal left border (back porch)
-  parameter H_FRONT         =   16; // horizontal right border (front porch)
+  parameter H_FRONT         =  16; // horizontal right border (front porch)
   parameter H_SYNC          =  96; // horizontal sync width
   // vertical constants
   parameter V_DISPLAY       = 480; // vertical display height
-  parameter V_TOP           =   33; // vertical top border
+  parameter V_TOP           =  33; // vertical top border
   parameter V_BOTTOM        =  10; // vertical bottom border
   parameter V_SYNC          =   2; // vertical sync # lines
   // derived constants
