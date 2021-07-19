@@ -4,23 +4,21 @@ A simple test pattern using the hvsync_generator module.
 */
 
 module vga(
-
-  input         clk,         	// clock and reset signals (input)
+  input         clk,         
   
-  output        VGA_HS, VGA_VS,	        // H/V sync signals (output)
-  output [3:0]  VGA_G, VGA_R, VGA_B	// RGB output (BGR order)
-
+  output        VGA_HS, VGA_VS,	       
+  output [3:0]  VGA_G, VGA_R, VGA_B	
   );
   
-  wire    [3:0] r, g, b; 
-  wire          display_on;	            // display_on signal 
-  wire   [9:0]  hpos;               	// 9-bit horizontal position
-  wire   [9:0]  vpos;                	// 9-bit vertical position
+  wire   [3:0]  r, g, b; 
+  
+  wire          display_on;	           
+  wire   [9:0]  hpos;               	
+  wire   [9:0]  vpos;                	
  
   wire           clk_25;
   wire           locked;
-  // Include the H-V Sync Generator module and
-  // wire it to inputs, outputs, and wires.
+
   vga_hvsync_gen inst_vga_hvsync_gen
   (
     .clk        (clk_25        ),
@@ -43,21 +41,16 @@ module vga(
   .clk_in1      (clk            )
   );
 
-  localparam COLOR_I    = 5;
-  localparam COLOR_R    = 30;
-  
   reg [2:0]  pix        = 3'b000;
   
   always @( posedge clk_25)
     begin
- /*     if ( !locked )              // doesn't work 
-        pix <= 0;
-      else */if ( ( hpos < 640 ) && ( vpos < 480 ) ) 
+      if( ( hpos < 640 ) && ( vpos < 480 ) ) 
         begin 
-          if ( ( hpos % 'd80 == 0 ) )
-                pix <= pix - 3'b001;
-        end
-    end
+          if( hpos % 'd80 == 0 )
+            pix <= pix - 3'b001;
+         end
+     end
 
   assign r[2:0]  =  'b111 ;
   assign g[2:0]  =  'b111 ; 
@@ -68,7 +61,7 @@ module vga(
   assign b[3]    =  pix[0];
   
 
-   d_ff_all_colors inst_d_ff_all_colors
+  d_ff_all_colors inst_d_ff_all_colors
    (
      .clk       (clk_25     ),  
      .reset     (0          ), 
@@ -82,13 +75,7 @@ module vga(
      .q_b       (VGA_B      )
    );
 
-  // Assign each color bit to individual wires.
-
-  // Concatenation operator merges the red, green, and blue signals
-  // into a single 3-bit vector, which is assigned to the 'rgb'
-  // output. The IDE expects this value in BGR order.
- // assign rgb = {b,g,r};
-
+ 
 endmodule
 
 

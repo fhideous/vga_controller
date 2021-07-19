@@ -1,13 +1,14 @@
 `timescale 1ns / 1ps
 
 module d_ff_4 (
-        input wire [3:0] D,
         input            clk,
         input            reset,
+        
+        input wire [3:0] D,
         output reg [3:0] Q
     );
     
-    always  @( posedge clk ) 
+    always @( posedge clk ) 
       begin
         if ( reset ) 
             Q <= 'b0000;

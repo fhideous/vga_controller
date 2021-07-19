@@ -33,43 +33,36 @@ module d_ff_all_colors(
         output     [3:0]  q_b
     );
     
-    wire    [3:0] r_tmp, b_tmp, g_tmp;
+  wire    [3:0] r_tmp, b_tmp, g_tmp;
     
-  d_ff_4 inst_d_ff_4_r
-  (
+  d_ff_4 inst_d_ff_4_r(
+    .clk      (clk        ),   
+    .reset    (0          ),
   
-  .clk(clk),   
-  .reset(0),
-  
-  .D(d_r),
-  
-  .Q(r_tmp)
+    .D        (d_r        ),
+    .Q        (r_tmp      )
   );
 
   d_ff_4 ints_d_ff_4_g
   (
+    .clk      (clk        ),   
+    .reset    (0          ),
   
-  .clk(clk),   
-  .reset(0),
-  
-  .D(d_g),
-  
-  .Q(g_tmp)
+    .D        (d_g        ),
+    .Q        (g_tmp      )
   );
 
   d_ff_4 inst_d_ff_4_b
   (
+    .clk      (clk        ),   
+    .reset    (0          ),
   
-  .clk(clk),   
-  .reset(0),
-  
-  .D(d_b),
-  
-  .Q(b_tmp)
+    .D        (d_b        ),
+    .Q        (b_tmp      )
   );
    
-   assign q_r = r_tmp;
-   assign q_b = b_tmp;
-   assign q_g = g_tmp;
+  assign q_r = r_tmp;
+  assign q_b = b_tmp;
+  assign q_g = g_tmp;
     
 endmodule
