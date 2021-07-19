@@ -16,8 +16,7 @@ module vga_tb;
     vga uut
     (
             .clk(clk),
-            .reset(reset),
-            
+        
             .VGA_HS(VGA_HS),
             .VGA_VS(VGA_VS),
                         

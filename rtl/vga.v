@@ -58,15 +58,29 @@ module vga(
                 pix <= pix - 3'b001;
         end
     end
-    
-    assign VGA_R[2:0]  =  'b111 ;
-    assign VGA_G[2:0]  =  'b111 ;
-    assign VGA_B[2:0]  =  'b111 ;
 
-    assign VGA_R[3] = pix[2];
-    assign VGA_G[3] = pix[1];
-    assign VGA_B[3] = pix[0];
+  assign r[2:0]  =  'b111 ;
+  assign g[2:0]  =  'b111 ; 
+  assign b[2:0]  =  'b111 ;
+  
+  assign r[3]    =  pix[2];
+  assign g[3]    =  pix[1];
+  assign b[3]    =  pix[0];
+  
 
+   d_ff_all_colors inst_dff_all_colors
+   (
+     .clk       (clk_25     ),  
+     .reset     (0          ), 
+     
+     .d_r       (r          ),
+     .d_g       (g          ),
+     .d_b       (b          ),
+
+     .q_r       (VGA_R      ),
+     .q_g       (VGA_G      ),
+     .q_b       (VGA_B      )
+   );
 
   // Assign each color bit to individual wires.
 
