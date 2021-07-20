@@ -1,2 +1,10 @@
 /tmp
 
+ip/*
+!ip/clk_25
+
+ip/clk_25/*
+!ip/clk_25/clk_25.xci
+
+
+
