@@ -17,33 +17,33 @@ module vga_hvsync_gen(
   output reg            hsync, vsync,
   
   output                display_on,
-  output reg [9:0]      hpos,
+  output reg [10:0]      hpos,
   output reg [9:0]      vpos
 );
 
   // declarations for TV-simulator sync parameters
   // horizontal constants
-  parameter H_DISPLAY       = 640; 
-  parameter H_BACK          =  48; 
-  parameter H_FRONT         =  16; 
-  parameter H_SYNC          =  96;
+parameter H_DISPLAY       = 1024; 
+parameter H_BACK          =   80; 
+parameter H_FRONT         =   48; 
+parameter H_SYNC          =   32;
   // vertical constants
-  parameter V_DISPLAY       = 480;
-  parameter V_TOP           =  33;
-  parameter V_BOTTOM        =  10; 
-  parameter V_SYNC          =   2; 
+parameter V_DISPLAY       =  768;
+parameter V_TOP           =   15;
+parameter V_BOTTOM        =    3; 
+parameter V_SYNC          =    4; 
   // derived constants
-  parameter H_SYNC_START    = H_DISPLAY + H_FRONT;
-  parameter H_SYNC_END      = H_DISPLAY + H_FRONT  + H_SYNC   - 1;
-  parameter H_MAX           = H_DISPLAY + H_BACK   + H_FRONT  + H_SYNC - 1;
-  parameter V_SYNC_START    = V_DISPLAY + V_BOTTOM;
-  parameter V_SYNC_END      = V_DISPLAY + V_BOTTOM + V_SYNC   - 1;
-  parameter V_MAX           = V_DISPLAY + V_TOP    + V_BOTTOM + V_SYNC - 1;
+parameter H_SYNC_START    = H_DISPLAY + H_FRONT;
+parameter H_SYNC_END      = H_DISPLAY + H_FRONT  + H_SYNC   - 1;
+parameter H_MAX           = H_DISPLAY + H_BACK   + H_FRONT  + H_SYNC - 1;
+parameter V_SYNC_START    = V_DISPLAY + V_BOTTOM;
+parameter V_SYNC_END      = V_DISPLAY + V_BOTTOM + V_SYNC   - 1;
+parameter V_MAX           = V_DISPLAY + V_TOP    + V_BOTTOM + V_SYNC - 1;
 
-  wire hmaxxed = (hpos == H_MAX) || !reset;	
-  wire vmaxxed = (vpos == V_MAX) || !reset;	
+wire hmaxxed = (hpos == H_MAX) || !reset;	
+wire vmaxxed = (vpos == V_MAX) || !reset;	
   
-  always @( posedge clk )
+always @( posedge clk )
   begin
     if( !reset )
       hpos <= 'b0;
@@ -56,7 +56,7 @@ module vga_hvsync_gen(
     end
   end
    
-  always @( posedge clk )
+always @( posedge clk )
   begin
     if( !reset )
       vpos <= 'b0;
