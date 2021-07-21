@@ -1,24 +1,24 @@
 `timescale 1ns / 1ps
 
-`ifndef HVSYNC_GENERATOR_H
-`define HVSYNC_GENERATOR_H
+`ifndef HVSYNC_o_GENERATOR_H
+`define HVSYNC_o_GENERATOR_H
 
 /*
 Video sync generator, used to drive a simulated CRT.
 To use:
-- Wire the hsync and vsync signals to top level outputs
+- Wire the hsync_ and vsync_o signals to top level outputs
 - Add a 3-bit (or more) "rgb" output to the top level
 */
 
 module vga_hvsync_gen(
-  input                 clk,
-  input                 reset,
+  input                 clk_i,
+  input                 reset_i,
   
-  output reg            hsync, vsync,
+  output reg            hsync_o, vsync_o,
   
-  output                display_on,
-  output reg [10:0]      hpos,
-  output reg [9:0]      vpos
+  output                display_on_o,
+  output reg [10:0]     hpos_o,
+  output reg [9:0]      vpos_o
 );
 
   // declarations for TV-simulator sync parameters
@@ -40,38 +40,40 @@ parameter V_SYNC_START    = V_DISPLAY + V_BOTTOM;
 parameter V_SYNC_END      = V_DISPLAY + V_BOTTOM + V_SYNC   - 1;
 parameter V_MAX           = V_DISPLAY + V_TOP    + V_BOTTOM + V_SYNC - 1;
 
-wire hmaxxed = (hpos == H_MAX) || !reset;	
-wire vmaxxed = (vpos == V_MAX) || !reset;	
+wire hmaxxed = (hpos_o == H_MAX) ;	
+wire vmaxxed = (vpos_o == V_MAX) ;	
   
-always @( posedge clk )
-  begin
-    if( !reset )
-      hpos <= 'b0;
-    else begin
-      hsync <= ( ( hpos >= H_SYNC_START ) && ( hpos <= H_SYNC_END ) );
-      if( hmaxxed )
-        hpos <= 0;
+always @( posedge clk_i ) begin
+  if( !reset_i ) begin 
+    hsync_o <= 'b0;
+    hpos_o  <= 'b0;
+  end
+  else begin
+    hsync_o <= ( ( hpos_o >= H_SYNC_START ) && ( hpos_o <= H_SYNC_END ) );
+    if( hmaxxed )
+      hpos_o <= 0;
+    else
+      hpos_o <= hpos_o + 1;
+  end
+end
+
+always @( posedge clk_i ) begin
+  if( !reset_i ) begin
+    vsync_o <= 'b0;      
+    vpos_o  <= 'b0;
+  end
+  else begin
+    vsync_o <= ( ( vpos_o >= V_SYNC_START ) && ( vpos_o <= V_SYNC_END ) );
+    if( hmaxxed )
+      if( vmaxxed )
+        vpos_o <= 0;
       else
-        hpos <= hpos + 1;
-    end
+        vpos_o <= vpos_o + 1;
   end
-   
-always @( posedge clk )
-  begin
-    if( !reset )
-      vpos <= 'b0;
-    else begin
-      vsync <= ( ( vpos >= V_SYNC_START ) && ( vpos <= V_SYNC_END ) );
-      if( hmaxxed )
-        if( vmaxxed )
-          vpos <= 0;
-        else
-          vpos <= vpos + 1;
-    end
-  end
+end
   
-  // display_on is set when beam is in "safe" visible frame
-  assign display_on = ( hpos < H_DISPLAY ) && ( vpos < V_DISPLAY );
+// display_on_o is set when beam is in "safe" visible frame
+assign display_on_o = ( hpos_o < H_DISPLAY ) && ( vpos_o < V_DISPLAY );
 
 endmodule
 

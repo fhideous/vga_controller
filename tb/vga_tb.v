@@ -39,10 +39,6 @@ module vga_tb;
      reset = 'b1;
    end
 
-   initial begin 
-
-
-   end
 
 
 endmodule
