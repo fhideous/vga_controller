@@ -1,2 +1,10 @@
 /tmp
 
+ip/*
+!ip/clk_hvsync
+
+ip/clk_hvsync/*
+!ip/clk_hvsync/clk_hvsync.xci
+
+
+
